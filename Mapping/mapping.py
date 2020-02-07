@@ -11,8 +11,16 @@ html = """Volcano name : <br>
 Height : %s m
 """
 fg = folium.FeatureGroup(name = "My Map")
+def color_producer(el):
+        if int(el) <= 2000:
+            return "green"
+        elif int(el) <= 3000:
+            return "orange"
+        else :
+            return "red"
+fg.add_child(folium.GeoJson(data = open("world.json", "r", encoding = "utf_8-sig")))
 for lt, ln, el, nam in zip(lat, lon, elev, name):
     iframe = folium.IFrame(html=html % (nam, nam, el), width=200, height=100)
-    fg.add_child(folium.Marker(location = [lt, ln], popup = folium.Popup(iframe), icon = folium.Icon(color = "green")))
+    fg.add_child(folium.CircleMarker(location = [lt, ln], popup = folium.Popup(iframe), radius = 6, fill_opacity = 0.7, fill_color = color_producer(el), fill = True,color = "grey", tooltip = nam))
 map.add_child(fg)
 map.save("Map1.html")
